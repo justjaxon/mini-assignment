@@ -136,25 +136,32 @@ public class LoopsInfinityAndBeyond {
 	* @param s
 	* @return
 	*/
-	public static int countFlyingSaucers(String s) {             //BROKEN!!!!!!!!!!!!!!!!!!
+		public static int countFlyingSaucers(String s) {
 	    int count = 0;
-	    int index = s.indexOf('(');
-	    while (index >= 0) {
-	        int endIndex = s.indexOf(')', index + 1);
-	        if (endIndex >= 0) {
-	            String subStr = s.substring(index + 1, endIndex);
-	            if ((subStr.contains("=") && !subStr.contains("*"))) {
+	    boolean hasStar = false; // flag to check for asterisks within a set of parentheses
+
+	    for (int i = 0; i < s.length(); i++) {
+	        char c = s.charAt(i);
+
+	        if (c == '(') {
+	            hasStar = false;
+	        } else if (c == ')') {
+	            if (!hasStar) {
 	                count++;
-	            } else if ((s.charAt(s.length() - 1) == '(') || (s.charAt(s.length() - 1) == ')') || (s.charAt(s.length() - 1) == '=')) {
-	                if ((s.charAt(0) == '(') || (s.charAt(0) == ')') || (s.charAt(0) == '=')) {
-	                    count++;
+	            }
+	            hasStar = false;
+	        } else if (c == '=') {
+	            hasStar = false;
+	            for (int j = i + 1; j < s.length() && s.charAt(j) != ')'; j++) {
+	                if (s.charAt(j) == '*') {
+	                    hasStar = true;
+	                    count--;
+	                    break;
 	                }
 	            }
-	            index = s.indexOf('(', endIndex + 1);
-	        } else {
-	            break;
 	        }
 	    }
+
 	    return count;
 	}
 	/**
